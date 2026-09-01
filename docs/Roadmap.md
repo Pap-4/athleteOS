@@ -6,9 +6,9 @@ A Plan to work from and tick off as development progresses
 
 - [X] **Problem Statement** - Paragraph on what AtheteOS solves and target audience. (README file)
 
-- [ ] **Architecture Diagram** - Modular Monolith, 5 modules (Authentication, Activities, Nutrition, Goals, Analytics). Each module owns their individual routes/service/repository + Postgres schema. Communication only through public contracts.
+- [X] **Architecture Diagram** - Modular Monolith, 5 modules (Authentication, Activities, Nutrition, Goals, Analytics). Each module owns their individual routes/service/repository + Postgres schema. Communication only through public contracts.
 
-- [ ] **Entity Relationshop Diagram (ERD)** - Entites with attributes with clear connections
+- [X] **Entity Relationshop Diagram (ERD)** - Entites with attributes with clear connections
 
 - [ ] **Domain Model v1** - Users / Activities (with 'type' + 'jsonb metrics') / Nutrition Entries / Goals
 
