@@ -11,7 +11,7 @@ A Plan to work from and tick off as development progresses
 - [X] **Entity Relationshop Diagram (ERD)** - Entites with attributes with clear connections
 
 
-- [ ] **Minimum Viable Product (MVP) Scope** - Begin with two sport types (running + gym) - continuous metrics (sets/reps/etc), + basic nutrition logging and a single progress chart. 
+- [X] **Minimum Viable Product (MVP) Scope** - Begin with two sport types (running + gym) - continuous metrics (sets/reps/etc), + basic nutrition logging and a single progress chart. 
 
 ## Phase 1 - Infastructure 
 
