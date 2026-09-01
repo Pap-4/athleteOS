@@ -123,8 +123,6 @@ A running log of specific calls made and why, worth extending as more get made:
 - **Water is tracked in millilitres** — one canonical unit avoids conversion bugs between logging and display; the UI can present it however fits, but the database only ever stores millilitres.
 
 ## Related files
-
-- `schema.prisma` — Prisma implementation of this design (needs the update noted above)
 - `data-model.md` — ERD matching the current schema
 - `GLOSSARY.md` — plain-language definitions of the terms used throughout this document
 - `ROADMAP.md` — build order this architecture is being implemented against
