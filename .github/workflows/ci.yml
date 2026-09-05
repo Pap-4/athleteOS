@@ -26,6 +26,12 @@ jobs:
 
       - run: npm ci
 
+      - name: Generate Prisma Client
+        if: matrix.project == 'server'
+        run: npx prisma generate
+        env:
+          DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
+
       - run: npm run lint
 
       - run: npm run typecheck
