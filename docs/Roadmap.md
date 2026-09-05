@@ -29,7 +29,7 @@ A Plan to work from and tick off as development progresses
 
 ## Phase 2 - Vertical Slice
 
-- [ ] **User Authentication** - Sign Up / Sign In 
+- [X] **User Authentication** - Sign Up / Sign In 
 
 - [ ] **Activity Log** - Log one activity type end to end: form -> API -> Database -> List View
 
