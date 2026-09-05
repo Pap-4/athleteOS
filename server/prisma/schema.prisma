@@ -1,0 +1,60 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["auth", "activity", "nutrition"]
+}
+
+// ==================== Auth ====================
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  @@map("users")
+  @@schema("auth")
+}
+
+// ==================== Activities ====================
+
+enum SportType {
+  RUNNING
+  GYM
+
+  @@schema("activity")
+}
+
+model Session {
+  id        String    @id @default(uuid())
+  userId    String
+  sport     SportType
+  metrics   Json
+  loggedAt  DateTime  @default(now())
+  createdAt DateTime  @default(now())
+
+  @@map("sessions")
+  @@schema("activity")
+}
+
+// ==================== Nutrition ====================
+
+model NutritionEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  foodName  String
+  calories  Int
+  protein   Float
+  carbs     Float
+  fat       Float
+  loggedAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@map("entries")
+  @@schema("nutrition")
+}
