@@ -15,17 +15,17 @@ A Plan to work from and tick off as development progresses
 
 ## Phase 1 - Infastructure 
 
-- [ ] **Repo Structure** - Organise the repository with a base structure for future development (/client, /server /docs, etc). Inside /server one folder per module, each with routes.ts/service.ts/repository.ts and a single contract file per module.
+- [X] **Repo Structure** - Organise the repository with a base structure for future development (/client, /server /docs, etc). Inside /server one folder per module, each with routes.ts/service.ts/repository.ts and a single contract file per module.
 
-- [ ] **Configuration** - TypeScript configs + ESLint in both client and server
+- [X] **Configuration** - TypeScript configs + ESLint in both client and server
 
-- [ ] **Postgres** - Docker compose for local postgres
+- [X] **Postgres** - Docker compose for local postgres
 
-- [ ] **Translate Diagram** - Translate the Entity Relationship Diagram into a Prisma schema and run first migration. One schema.prisma, but each module's tables live under their own named postgres schema.
+- [X] **Translate Diagram** - Translate the Entity Relationship Diagram into a Prisma schema and run first migration. One schema.prisma, but each module's tables live under their own named postgres schema.
 
-- [ ] **Bare CI Workflow** - lint + typecheck on push
+- [X] **Bare CI Workflow** - lint + typecheck on push
 
-- [ ] **Basic Deployment** - Deploy a skeleton and get something live (to be updated and redeployed as development progresses)
+- [X] **Basic Deployment** - Deploy a skeleton and get something live (to be updated and redeployed as development progresses)
 
 ## Phase 2 - Vertical Slice
 
