@@ -1,11 +1,15 @@
 import Navbar from './components/Navbar'
-import Dashboard from './pages/Dashboard' 
+import Dashboard from './pages/Dashboard'
+import Footer from './components/Footer'
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="flex min-h-screen flex-col bg-gray-50 text-gray-900">
       <Navbar />
-      <Dashboard />
+      <div className="flex-1">
+        <Dashboard />
+      </div>
+      <Footer />
     </div>
   )
 }
