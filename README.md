@@ -1,20 +1,32 @@
 # AthleteOS
+
 Full Stack Fitness and Nutrition Dashboard - Personal Project
 
-https://athleteos-hzpc.onrender.com/api/v1/health
+By Michael Papanikolaou
 
-Michael Papanikolaou
+## Problem Statement
 
-# AthleteOS - Problem Statement
+### What problem does AthleteOS solve?
 
-## What problem does AthleteOS Solve
+AthleteOS combines activities such as running, swimming, cycling, gym etc. with nutrition to form a centralised dashboard where athletes can log their workouts, view sessions, and track their progress over time using visual charts.
 
-AthleteOS combines activities such as running, swimming, cycling, gym etc. with nutrition to form a centralised dashboard where athletes can log their workout, view sessions, and track their progress over time using visual charts. 
+### Who is AthleteOS for?
 
-## Who is AthleteOS for
-AthleteOS is targeted for the "active person" who will benefit from a diverse fitness dashboard, however it is not limited to those who enjoy raising their heart rate and is accessible for all. 
+AthleteOS is targeted at the "active person" who will benefit from a diverse fitness dashboard. It is not limited to those who enjoy raising their heart rate and is accessible to all.
 
-## Running the Application
+## Tech Stack
+
+- **Client:** React, Vite, TypeScript, Tailwind CSS
+- **Server:** Node.js, Express, TypeScript
+- **Database:** PostgreSQL with Prisma
+- **Auth:** Argon2id password hashing, JWT
+- **Tooling:** GitHub Actions CI, Vercel (client), Render (server)
+
+## Status
+
+Work in progress. The backend auth API and the dashboard layout (with placeholder data) are in place. Activity logging, real data in the charts, and nutrition tracking are next.
+
+## Running Locally
 
 ### Prerequisites
 
@@ -76,6 +88,4 @@ Press `Ctrl+C` in the backend and frontend terminals. To stop the database too, 
 
 ### Troubleshooting
 
-- **`Cannot find module '../generated/prisma/client'`**: run `npx prisma generate` inside `server/`.
-- **`JWT_SECRET environment variable is not set`**: check that `server/.env` exists and contains `JWT_SECRET`.
-- **Database connection errors**: make sure Docker Desktop is running and `docker compose ps` shows the `postgres` container as `Up`.
+- **`Cannot find module '../generated/prisma/client'`**: run `npx prisma generate`
