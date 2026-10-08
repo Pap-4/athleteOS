@@ -4,7 +4,7 @@
 
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import * as authRepository from './repository';
+import * as authRepository from './auth.repository';
 
 // The secret key used to sign and verify JWTs. Whoever holds this string can
 // forge valid tokens, so it must never be committed to git — it lives in .env

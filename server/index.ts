@@ -11,7 +11,7 @@
 import 'dotenv/config';
 
 import express from 'express';
-import { registerAuth } from './modules/auth/routes';
+import { registerAuth } from './modules/auth/auth.controller';
 
 const app = express();
 

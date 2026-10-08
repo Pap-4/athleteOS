@@ -5,7 +5,7 @@
 // purely "translate HTTP <-> function calls".
 
 import { Router, type Express, type Request, type Response } from 'express';
-import * as authService from './service';
+import * as authService from './auth.service';
 
 // A Router is a mini, self-contained set of routes that gets "mounted" onto
 // the main app at a specific path (see registerAuth below).

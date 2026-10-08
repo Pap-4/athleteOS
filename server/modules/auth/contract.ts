@@ -6,4 +6,4 @@
 // functions: getUser(id) and verifyToken(t). Nothing more gets exposed here on
 // purpose — if some future module needs something else from Auth, it should be
 // added here deliberately, not by reaching into service.ts directly.
-export { getUser, verifyToken } from './service';
+export { getUser, verifyToken } from './auth.service';
