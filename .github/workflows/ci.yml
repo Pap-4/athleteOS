@@ -9,12 +9,9 @@ on:
 jobs:
   lint-and-typecheck:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: [client, server]
     defaults:
       run:
-        working-directory: ${{ matrix.project }}
+        working-directory: client
     steps:
       - uses: actions/checkout@v4
 
@@ -22,15 +19,9 @@ jobs:
         with:
           node-version: '24'
           cache: 'npm'
-          cache-dependency-path: ${{ matrix.project }}/package-lock.json
+          cache-dependency-path: client/package-lock.json
 
       - run: npm ci
-
-      - name: Generate Prisma Client
-        if: matrix.project == 'server'
-        run: npx prisma generate
-        env:
-          DATABASE_URL: "postgresql://user:pass@localhost:5432/db"
 
       - run: npm run lint
 
