@@ -23,7 +23,7 @@ cp .env.example .env                 # then set JWT_SECRET
 npm install
 npm run db:generate                  # generate the Prisma client
 npm run db:migrate                   # apply migrations
-npm run dev                          # http://localhost:3000
+npm run dev                          # http://localhost:4000
 npm test                             # uses TEST_DATABASE_URL, migrates it first
 ```
 
