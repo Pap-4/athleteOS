@@ -1,0 +1,132 @@
+// One schema.prisma for the whole app. Each module's tables live in their own
+// named Postgres schema (see docs/architectureDocumentation.md).
+//
+// Deliberate: userId columns in activity/nutrition/goals are plain uuids with NO
+// Prisma relation to auth.users. A foreign key across Postgres schemas would let
+// one module's tables reach into another's, which the module boundary forbids.
+// Relations below only join tables inside the SAME module schema.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["auth", "activity", "nutrition", "goals"]
+}
+
+// ───────────────────────── auth ─────────────────────────
+
+model User {
+  id           String   @id @default(uuid(7)) @db.Uuid
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("users")
+  @@schema("auth")
+}
+
+// ─────────────────────── activity ───────────────────────
+
+model Session {
+  id              String   @id @default(uuid(7)) @db.Uuid
+  userId          String   @db.Uuid
+  type            String // "running" | "gym" for the MVP; more sports later
+  occurredOn      DateTime @db.Date
+  durationMinutes Int
+  source          String   @default("manual") // manual | strava | apple_health
+  externalId      String?
+  metrics         Json // sport-specific shape, validated in the Activities module
+  createdAt       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([userId, source, externalId])
+  @@index([userId, occurredOn])
+  @@index([userId, type, occurredOn])
+  @@map("sessions")
+  @@schema("activity")
+}
+
+// ────────────────────── nutrition ───────────────────────
+
+model Food {
+  id           String  @id @default(uuid(7)) @db.Uuid
+  userId       String  @db.Uuid
+  name         String
+  servingLabel String
+  calories     Int
+  proteinG     Int
+  carbsG       Int
+  fatG         Int
+  entries      Entry[]
+
+  @@index([userId])
+  @@map("foods")
+  @@schema("nutrition")
+}
+
+model Entry {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  occurredOn DateTime @db.Date
+  mealType   String // breakfast | lunch | dinner | snack
+  foodId     String?  @db.Uuid
+  food       Food?    @relation(fields: [foodId], references: [id], onDelete: SetNull)
+  // Name is captured at log time, so entries stay valid with no saved food
+  // and survive later edits to / deletion of the saved food.
+  name       String
+  quantity   Float    @default(1)
+  calories   Int
+  proteinG   Int
+  carbsG     Int
+  fatG       Int
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([userId, occurredOn])
+  @@map("entries")
+  @@schema("nutrition")
+}
+
+model Water {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  userId     String   @db.Uuid
+  occurredOn DateTime @db.Date
+  amountMl   Int
+
+  @@index([userId, occurredOn])
+  @@map("water")
+  @@schema("nutrition")
+}
+
+// ───────────────────────── goals ────────────────────────
+// Tables exist so the first migration matches the ERD; the Goals module itself
+// is Phase 3 and is not implemented yet.
+
+model Target {
+  id          String         @id @default(uuid(7)) @db.Uuid
+  userId      String         @db.Uuid
+  metric      String
+  targetValue Float
+  targetDate  DateTime?      @db.Date
+  status      String         @default("active")
+  marks       ProgressMark[]
+
+  @@index([userId, status])
+  @@map("targets")
+  @@schema("goals")
+}
+
+model ProgressMark {
+  id         String   @id @default(uuid(7)) @db.Uuid
+  goalId     String   @db.Uuid
+  goal       Target   @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  recordedAt DateTime @default(now()) @db.Timestamptz(6)
+  value      Float
+
+  @@index([goalId, recordedAt])
+  @@map("progress_marks")
+  @@schema("goals")
+}
