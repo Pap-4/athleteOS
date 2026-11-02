@@ -57,7 +57,14 @@ export async function api<T>(
       ...(options.body !== undefined ? { body: JSON.stringify(options.body) } : {}),
     })
   } catch {
-    throw new ApiError(0, 'NETWORK_ERROR', 'Could not reach the server. Is the API running?')
+    // fetch itself failed: the browser could not connect to the origin that serves this page
+    // (or to VITE_API_URL). A stopped API behind the dev proxy is reported differently, below.
+    const target = BASE || window.location.origin
+    throw new ApiError(
+      0,
+      'NETWORK_ERROR',
+      `Could not connect to ${target}. If you restarted the dev server, reload this page and use the URL it prints.`,
+    )
   }
 
   if (res.status === 204) return undefined as T
@@ -70,10 +77,16 @@ export async function api<T>(
     if (res.status === 401 && token && !path.startsWith('/api/v1/auth/sign')) {
       window.dispatchEvent(new Event(AUTH_EXPIRED_EVENT))
     }
+    // A 5xx with no JSON error body didn't come from our API: the dev proxy or a gateway
+    // answered because the API isn't reachable.
+    const apiDown = !err && res.status >= 500
     throw new ApiError(
       res.status,
-      err?.code ?? 'UNKNOWN',
-      err?.message ?? `Request failed (${res.status})`,
+      err?.code ?? (apiDown ? 'API_UNAVAILABLE' : 'UNKNOWN'),
+      err?.message ??
+        (apiDown
+          ? "The API isn't responding. Make sure the server is running (npm run dev in server/)."
+          : `Request failed (${res.status})`),
       err?.details ?? [],
     )
   }
