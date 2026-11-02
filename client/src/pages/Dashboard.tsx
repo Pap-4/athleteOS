@@ -1,79 +1,100 @@
-import PlaceholderChart from '../components/PlaceholderChart'
+import { useState } from 'react'
+import { FormError } from '../components/form'
+import NutritionCard from '../components/NutritionCard'
+import ProgressChart from '../components/ProgressChart'
+import { formatDay, formatPace, localToday } from '../lib/dates'
+import type { Activity, ProgressSeries, Sport } from '../lib/types'
+import { useApi } from '../lib/useApi'
 
-const NUTRITION_TODAY = [
-  { label: 'Protein', current: 97,   target: 150,  unit: 'g' },
-  { label: 'Carbs',   current: 196,  target: 300,  unit: 'g' },
-  { label: 'Fat',     current: 50,   target: 70,   unit: 'g' },
-  { label: 'Water',   current: 1000, target: 2000, unit: 'ml' },
+const SPORTS: { value: Sport; label: string }[] = [
+  { value: 'running', label: 'Running' },
+  { value: 'gym', label: 'Gym' },
 ]
 
-const RECENT_ACTIVITY = [
-  { id: 1, date: 'Tue 6 Oct', type: 'Run', summary: '8 km in 45 min' },
-  { id: 2, date: 'Mon 5 Oct', type: 'Gym', summary: 'Bench Press, Overhead Press, Incline Press' },
-  { id: 3, date: 'Sat 3 Oct', type: 'Run', summary: '10 km in 59 min' },
-]
+function summary(a: Activity): string {
+  if (a.type === 'running') {
+    return `${a.metrics.distance} km in ${a.durationMinutes} min (${formatPace(a.metrics.pace)})`
+  }
+  const names = a.metrics.exercises.map((e) => e.exercise).join(', ')
+  return `${names} · ${a.durationMinutes} min`
+}
 
 export default function Dashboard() {
+  const [sport, setSport] = useState<Sport>('running')
+  const progress = useApi<ProgressSeries>(
+    `/api/v1/analytics/progress?sport=${sport}&weeks=12&asOf=${localToday()}`,
+  )
+  const recent = useApi<{ activities: Activity[] }>('/api/v1/activities?limit=10')
+
   return (
     <main className="mx-auto grid max-w-7xl gap-6 p-6 lg:grid-cols-[2fr_1fr]">
-      {/* Left: Dashboard (graph on top, recent activity below) */}
-      <section className="border border-gray-300 p-6">
+      {/* Left: progress chart on top, recent activity below */}
+      <section className="border border-gray-300 bg-white p-6">
         <h1 className="text-2xl font-semibold">Dashboard</h1>
 
         <div className="mt-4 border-b border-gray-300 pb-6">
-          <p className="text-sm text-gray-500">Running distance (sample data)</p>
-          <PlaceholderChart />
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm text-gray-500">
+              {sport === 'running' ? 'Weekly running distance' : 'Weekly gym time'}, last 12 weeks
+            </p>
+            <div role="group" aria-label="Sport" className="inline-flex overflow-hidden rounded-lg border border-gray-300 text-sm">
+              {SPORTS.map((s) => (
+                <button
+                  key={s.value}
+                  type="button"
+                  aria-pressed={sport === s.value}
+                  onClick={() => setSport(s.value)}
+                  className={`px-3 py-1.5 font-medium transition-colors ${
+                    sport === s.value ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {progress.error && <FormError error={progress.error} />}
+          {progress.data ? (
+            <ProgressChart
+              points={progress.data.points}
+              unit={progress.data.unit}
+              label={`${progress.data.metric} per week in ${progress.data.unit}`}
+            />
+          ) : (
+            !progress.error && <p className="py-16 text-center text-sm text-gray-500">Loading chart…</p>
+          )}
         </div>
 
         <div className="pt-6">
           <h2 className="text-xl font-semibold">Recent activity</h2>
-          <ul className="mt-4 divide-y divide-gray-200">
-            {RECENT_ACTIVITY.map((a) => (
-              <li key={a.id} className="flex items-baseline justify-between gap-4 py-3">
-                <span>
-                  {a.date}: {a.type}
-                </span>
-                <span className="text-gray-500">{a.summary}</span>
-              </li>
-            ))}
-          </ul>
+          {recent.error && <FormError error={recent.error} />}
+          {recent.loading && !recent.data && <p className="mt-4 text-sm text-gray-500">Loading…</p>}
+          {recent.data && recent.data.activities.length === 0 && (
+            <p className="mt-4 text-gray-500">No activities yet. Use “Log” in the menu to add your first run or gym session.</p>
+          )}
+          {recent.data && recent.data.activities.length > 0 && (
+            <ul className="mt-4 divide-y divide-gray-200">
+              {recent.data.activities.map((a) => (
+                <li key={a.id} className="flex items-baseline justify-between gap-4 py-3">
+                  <span>
+                    {formatDay(a.occurredOn)}: {a.type === 'running' ? 'Run' : 'Gym'}
+                  </span>
+                  <span className="text-right text-gray-500">{summary(a)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
 
       {/* Right: Goals on top, Nutrition below */}
-      <div className="grid gap-6">
+      <div className="grid content-start gap-6">
         <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
           <h2 className="text-xl font-semibold">Goals</h2>
-          <ul className="mt-4 list-disc space-y-2 pl-5">
-            <li>Run 20 km this week</li>
-            <li>Gym 3 times this week</li>
-            <li>Hit 150 g protein each day</li>
-          </ul>
+          <p className="mt-4 text-sm text-gray-500">Goal tracking is coming soon.</p>
         </section>
-        <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold">Nutrition</h2>
-          <ul className="mt-4 space-y-4">
-            {NUTRITION_TODAY.map((n) => {
-              const pct = Math.min(100, (n.current / n.target) * 100)
-              return (
-                <li key={n.label}>
-                  <div className="flex justify-between text-sm">
-                    <span className="font-medium">{n.label}</span>
-                    <span className="text-gray-500">
-                      {n.current}/{n.target}{n.unit}
-                    </span>
-                  </div>
-                  <div className="mt-1 h-2 rounded-full bg-gray-100">
-                    <div
-                      className="h-2 rounded-full bg-indigo-500"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
-        </section>
+        <NutritionCard />
       </div>
     </main>
   )

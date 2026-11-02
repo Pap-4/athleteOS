@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router'
 
 // One list drives the menu. Flip `ready` to true when that form exists.
 const LOG_OPTIONS = [
@@ -52,12 +53,13 @@ export default function LogMenu() {
           {LOG_OPTIONS.map((o) => (
             <li key={o.sport}>
               {o.ready ? (
-                <a
-                  href={`/log/${o.sport}`}
+                <Link
+                  to={`/log/${o.sport}`}
+                  onClick={() => setOpen(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                 >
                   Log {o.label.toLowerCase()}
-                </a>
+                </Link>
               ) : (
                 <span
                   aria-disabled="true"
