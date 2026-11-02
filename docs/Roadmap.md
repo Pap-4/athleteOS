@@ -31,15 +31,15 @@ A Plan to work from and tick off as development progresses
 
 - [X] **User Authentication** - Sign Up / Sign In 
 
-- [ ] **Activity Log** - Log one activity type end to end: form -> API -> Database -> List View
+- [X] **Activity Log** - Log one activity type end to end: form -> API -> Database -> List View
 
-- [ ] **Data Visualisation** - One Chart showing the activities trend over time 
+- [X] **Data Visualisation** - One Chart showing the activities trend over time 
 
 ## Phase 3 - Further Expansion
 
-- [ ] **Second Sport Type** - Add the second MVP sport type (e.g gym)
+- [X] **Second Sport Type** - Add the second MVP sport type (e.g gym)
 
-- [ ] **Nutrition Logging** - Entry form + Daily list view
+- [X] **Nutrition Logging** - Entry form + Daily list view
 
 - [ ] **Goals** - Create and track goal progress. Reacts to activities' activity.logged event to recheck progress. 
 
