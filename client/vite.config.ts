@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     // In dev the API is reached through the same origin, so no CORS setup is needed.
-    proxy: { '/api': 'http://localhost:3000' },
+    proxy: { '/api': 'http://localhost:4000' },
   },
 })
